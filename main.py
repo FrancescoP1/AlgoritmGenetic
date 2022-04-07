@@ -1,6 +1,6 @@
 import copy
 import random
-
+import matplotlib.pyplot as plt
 from individ import Individ
 global a
 global b
@@ -202,11 +202,11 @@ def select_worse_element(pop):
 def swap_worse_for_fittest(pop1, pop2):
     # schimbam cel mai slab individ din pop2, cu cel mai bun din pop1
     el1 = select_fittest_element(pop1)
-    el2 = select_fittest_element(pop2)
-    if el1.fit > el2.fit:
-        el3 = select_worse_element(pop2)
-        pop2.remove(el3)
-        pop2.append(el1)
+    # el2 = select_fittest_element(pop2)
+    #if el1.fit > el2.fit:
+    el3 = select_worse_element(pop2)
+    pop2.remove(el3)
+    pop2.append(el1)
     return pop2
 
 
@@ -263,13 +263,29 @@ if __name__ == '__main__':
     # print(combine_lists([0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1], [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1], 17))
 
     g.write('Evolutia maximului: \n')
-    g.write('{0}\n'.format(select_fittest_element(prev_population).fit))
-    g.write('{0}\n'.format(select_fittest_element(new_population).fit))
+    max_evolution = []
+    m1 = select_fittest_element(prev_population)
+    m2 = select_fittest_element(new_population)
+    max_evolution.append(m1.fit)
+    max_evolution.append(m2.fit)
+    g.write('{0}\n'.format(m1.fit))
+    g.write('{0}\n'.format(m2.fit))
     gen = 2
-    while gen <= generations:
+    while gen < generations:
         intermediary_population = genetic_algorithm(new_population, rec_prob, mutation_prob)
         fittest_element = select_fittest_element(new_population)
         g.write('{0}\n'.format(fittest_element.fit))
         new_population = copy.deepcopy(intermediary_population)
-        print(gen)
+        #print(gen)
+        max_evolution.append(fittest_element.fit)
         gen += 1
+
+    gens = list(range(1, 51))
+    print(gens)
+    print(max_evolution)
+    plt.plot(gens, max_evolution)
+    plt.ylabel('Maximul')
+    plt.xlabel('Generatia')
+    plt.title('Evolutia maximului')
+    plt.show()
+
